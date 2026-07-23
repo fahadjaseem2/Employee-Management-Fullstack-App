@@ -24,6 +24,10 @@ jobs:
       - name: Install root deps
         run: npm ci
 
+      - name: Run ESLint
+        working-directory: frontend
+        run: npm run lint
+
       - name: Run Prettier
         run: npm run format
 
