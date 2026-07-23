@@ -1,13 +1,12 @@
 name: CI/CD Pipeline for Employee Management
 
 on:
-  workflow_dispatch: 
-    
-    #branches:
-      #- master
-  #pull_request:
-    #branches:
-      #- master
+  push:
+    branches:
+      - fix/eslint-testing-library
+  pull_request:
+    branches:
+      - fix/eslint-testing-library
 
 jobs:
   formatting:
