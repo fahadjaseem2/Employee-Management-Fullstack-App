@@ -30,5 +30,8 @@ jobs:
         run: |
           docker ps
           docker-compose ps
+
+      - name: Compose down
+        run: docker-compose down -v
         
         
