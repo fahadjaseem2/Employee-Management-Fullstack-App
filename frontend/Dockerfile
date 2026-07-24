@@ -1,4 +1,4 @@
-# Use an official Node.js image to build the application
+# use an official Node.js image to build the application
 FROM node:18 AS builder
 
 # Set the working directory
