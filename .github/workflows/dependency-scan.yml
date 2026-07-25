@@ -15,10 +15,13 @@ jobs:
         uses: aquasecurity/trivy-action@v0.36.0
         with:
           scan-type: 'fs' # fs= file system
-          scan-ref: '.'
+          scan-ref: '.' # scan from root that include frontend and backend
           #trivy-config: trivy.yaml # "Instead of specifying all the options in the workflow, read them from the trivy.yaml configuration file."
+          scanners: vuln
+          severity: HIGH,CRITICAL
           format: 'table' #This controls how the scan results are displayed. in table format. other formats are json, sarif, cyclonedx, template etc.
-
+          exit-code: 1
+          
 
 
       
