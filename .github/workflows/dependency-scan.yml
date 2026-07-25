@@ -9,14 +9,14 @@ jobs:
 
 
       - name: code checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Scan Node.js dependencies
         uses: aquasecurity/trivy-action@v0.36.0
         with:
           scan-type: 'fs' # fs= file system
-          scan-ref: '.''
-          trivy-config: trivy.yaml # "Instead of specifying all the options in the workflow, read them from the trivy.yaml configuration file."
+          scan-ref: '.'
+          #trivy-config: trivy.yaml # "Instead of specifying all the options in the workflow, read them from the trivy.yaml configuration file."
           format: 'table' #This controls how the scan results are displayed. in table format. other formats are json, sarif, cyclonedx, template etc.
 
 
