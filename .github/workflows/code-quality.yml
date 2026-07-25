@@ -3,7 +3,7 @@ on:
   workflow_call:
   
 jobs:
-  frontend:
+  code-quality:
     runs-on: ubuntu-latest
 
     defaults:
