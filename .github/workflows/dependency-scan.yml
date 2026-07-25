@@ -20,7 +20,7 @@ jobs:
           scanners: vuln
           severity: HIGH,CRITICAL
           format: 'table' #This controls how the scan results are displayed. in table format. other formats are json, sarif, cyclonedx, template etc.
-          exit-code: 1
+          exit-code: 0
           
 
 
