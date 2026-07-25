@@ -1,8 +1,9 @@
 name: CD Workflow for WorkForceOps
 on:
-  push:
-    branches:
-      - dev
+  workflow_dispatch:
+  # push:
+  #   branches:
+  #     - dev
 jobs:
   deploy:
     runs-on: self-hosted

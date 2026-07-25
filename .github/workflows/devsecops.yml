@@ -1,0 +1,19 @@
+name: devsecops
+
+on: 
+  push:
+    branches:
+      - dev
+
+jobs:
+  code-quality:
+    uses: ./.github.workflow/code-quality.yml
+
+  secret-scaning:
+    uses: ./.github/workflow/secret-scaning.yml 
+
+  
+
+  
+
+   

@@ -1,0 +1,11 @@
+name: Static Code Analysis (Semgrep)
+
+on: workflow_call
+
+jobs:
+  runs-on: ubuntu-latest
+  steps:
+    - name: code checkout
+      uses: actions/checkout@v6
+
+    

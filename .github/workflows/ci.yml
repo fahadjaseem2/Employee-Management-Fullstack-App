@@ -1,8 +1,9 @@
 name: CI Workflow for WorkforceOps
 on:
-  push:
-    branches:
-      - dev
+  workflow_dispatch:
+  # push:
+  #   branches:
+  #     - dev
   
 jobs:
   frontend:
