@@ -40,16 +40,16 @@ jobs:
           echo "High: $(jq '[.Results[].Vulnerabilities[] | select(.Severity=="HIGH")] | length' trivy-report.json)" 
 
       - name: Show Critical Vulnerabilities
-  if: always()
-  run: |
-    echo "===== Critical Vulnerabilities ====="
+        if: always()
+        run: |
+          echo "===== Critical Vulnerabilities ====="
 
-    jq -r '
-    .Results[].Vulnerabilities[]
-    | select(.Severity=="CRITICAL")
-    | [.PkgName, .InstalledVersion, .FixedVersion, .VulnerabilityID]
-    | @tsv
-    ' trivy-report.json | column -t
+          jq -r '
+          .Results[].Vulnerabilities[]
+          | select(.Severity=="CRITICAL")
+          | [.PkgName, .InstalledVersion, .FixedVersion, .VulnerabilityID]
+          | @tsv
+          ' trivy-report.json | column -t
 
 
       
