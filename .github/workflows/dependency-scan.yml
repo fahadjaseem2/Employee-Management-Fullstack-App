@@ -25,13 +25,13 @@ jobs:
           exit-code: 1
 
 
-      # - name: Upload Job Report
-      #   if: always()
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: trivy-report        # The name your zip file will have
-      #     path: trivy-report.sarif # Path to your file or directory  
-      #     retention-days: 5  # Keeps the file for 5 days only  
+      - name: Upload Job Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-report        # The name your zip file will have
+          path: trivy-report.sarif # Path to your file or directory  
+          retention-days: 5  # Keeps the file for 5 days only  
 
 
       
