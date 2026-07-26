@@ -12,31 +12,25 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Scan Node.js dependencies
-        uses: aquasecurity/trivy-action@v0.36.0 > vul-report.txt
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
-          scan-type: 'fs' # fs= file system
-          scan-ref: '.' # scan from root that include frontend and backend
+          scan-type: fs # fs= file system
+          scan-ref: . # scan from root that include frontend and backend
           #trivy-config: trivy.yaml # "Instead of specifying all the options in the workflow, read them from the trivy.yaml configuration file."
           scanners: vuln
           severity: HIGH,CRITICAL
-          # format: 'json' #This controls how the scan results are displayed. in table format. other formats are json, sarif, cyclonedx, template etc.
-          # output: trivy-report.json
+          format: table  #This controls how the scan results are displayed. in table format. other formats are json, sarif, cyclonedx, template etc.
+          output: trivy-report.txt
           exit-code: 1
 
-      - name: upload report to artifact
+
+      - name: Upload Job Report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: job-report
-          path: reports/vul-report.txt
-          retention-days: 5
-
-      # - name: Upload Job Report
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: trivy-report        # The name your zip file will have
-      #     path: trivy-report.json # Path to your file or directory  
-      #     retention-days: 5  # Keeps the file for 5 days only  
+          name: trivy-report        # The name your zip file will have
+          path: trivy-report.txt # Path to your file or directory  
+          retention-days: 5  # Keeps the file for 5 days only  
 
 
       
