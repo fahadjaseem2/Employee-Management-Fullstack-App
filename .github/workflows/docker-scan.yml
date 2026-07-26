@@ -6,8 +6,8 @@ jobs:
   docker-file-lint:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        fail-fast: false
         working-directory:
           - frontend
           - backend
