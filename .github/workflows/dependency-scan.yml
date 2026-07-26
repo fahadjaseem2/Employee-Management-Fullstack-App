@@ -36,6 +36,38 @@ jobs:
       - name: Trivy Summary
         if: always()
         run: |
+          echo "===== Trivy Summary ====="
+
+          echo "Critical: $(jq '[.runs[].results[] | select(.level=="error")] | length' trivy-report.sarif)"
+
+          echo "High: $(jq '[.runs[].results[] | select(.level=="warning")] | length' trivy-report.sarif)"
+
+# for JSON REPORT
+      - name: Scan Node.js dependencies
+        continue-on-error: true
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: fs 
+          scan-ref: . 
+          scanners: vuln
+          severity: HIGH,CRITICAL
+          format: json
+          output: trivy-report.json
+          exit-code: 1
+
+
+      - name: Upload Job Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-report        # The name your zip file will have
+          path: trivy-report.json # Path to your file or directory  
+          retention-days: 5  # Keeps the file for 5 days only 
+
+
+      - name: Trivy Summary For JSON
+        if: always()
+        run: |
           echo "Critical: $(jq '[.Results[].Vulnerabilities[] | select(.Severity=="CRITICAL")] | length' trivy-report.json)"
           echo "High: $(jq '[.Results[].Vulnerabilities[] | select(.Severity=="HIGH")] | length' trivy-report.json)" 
 
