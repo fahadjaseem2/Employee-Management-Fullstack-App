@@ -42,14 +42,33 @@ jobs:
       - name: Show Critical Vulnerabilities
         if: always()
         run: |
-          echo "===== Critical Vulnerabilities ====="
+          echo "============================================================================================="
+          printf "%-45s %-12s %-25s %-20s\n" "PACKAGE" "INSTALLED" "FIXED VERSION" "CVE"
+          echo "============================================================================================="
 
           jq -r '
           .Results[].Vulnerabilities[]
           | select(.Severity=="CRITICAL")
           | [.PkgName, .InstalledVersion, .FixedVersion, .VulnerabilityID]
           | @tsv
-          ' trivy-report.json | column -t
+          ' trivy-report.json |
+          while IFS=$'\t' read -r pkg inst fix cve; do
+            printf "%-45s %-12s %-25s %-20s\n" "$pkg" "$inst" "$fix" "$cve"
+          done
+
+
+
+      # - name: Show Critical Vulnerabilities
+      #   if: always()
+      #   run: |
+      #     echo "===== Critical Vulnerabilities ====="
+
+      #     jq -r '
+      #     .Results[].Vulnerabilities[]
+      #     | select(.Severity=="CRITICAL")
+      #     | [.PkgName, .InstalledVersion, .FixedVersion, .VulnerabilityID]
+      #     | @tsv
+      #     ' trivy-report.json | column -t
 
 
       
