@@ -16,6 +16,9 @@ jobs:
     uses: ./.github/workflows/dependency-scan.yml
 
   docker-lint-and-scan:
+    permissions:
+      contents: read
+      security-events: write
     uses: ./.github/workflows/docker-scan.yml
 
   

@@ -2,9 +2,9 @@ name: Docker Scan
 on:
   workflow_call
 
-permissions:
-  contents: read
-  security-events: write
+# permissions:
+#   contents: read
+#   security-events: write
 
 jobs:
   docker-file-lint:
