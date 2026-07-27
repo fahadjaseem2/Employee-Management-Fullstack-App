@@ -2,9 +2,6 @@ name: Docker Scan
 on:
   workflow_call
 
-# permissions:
-#   contents: read
-#   security-events: write
 
 jobs:
   docker-file-lint:
@@ -43,13 +40,15 @@ jobs:
           format: 'sarif'
           output: 'trivy-results.sarif'
           severity: 'HIGH,CRITICAL'
+          #scanners: vuln
+          #This focuses on vulnerability scanning and skips secret scanning.
 
 
-      # - name: Upload Trivy scan results to GitHub Security tab
-      #   uses: github/codeql-action/upload-sarif@v4
-      #   if: always() 
-      #   with:
-      #     sarif_file: 'trivy-results.sarif'
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v4
+        if: always() 
+        with:
+          sarif_file: 'trivy-results.sarif'
           
 # optional
       # - name: Upload docker Job Report
