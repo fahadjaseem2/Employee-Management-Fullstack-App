@@ -20,6 +20,10 @@ jobs:
       contents: read
       security-events: write
     uses: ./.github/workflows/docker-scan.yml
+  
+  sonarqube:
+    uses: ./.github/workflows/sonar-scan.yml
+    secrets: inherit
 
   
 
