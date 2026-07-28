@@ -1,10 +1,31 @@
-name: Sonar Qube Scan
+# name: Sonar Qube Scan
 
-on:   
+# on:   
+#   workflow_call:
+
+# jobs:
+#   sonar-scan-backend:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Code checkout
+#         uses: actions/checkout@v6
+#         with: 
+#           fetch-depth: 0
+
+#       - name: SonarQube scan
+#         uses: SonarSource/sonarqube-scan-action@v8.2.1 # Ex: v4.1.0 or sha1, See the latest version at https://github.com/marketplace/actions/official-sonarqube-scan
+#         env:
+#           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+
+name: Sonar Scan
+
+on:
   workflow_call:
 
 jobs:
-  sonar-scan:
+  sonar-sccan-frontend:
     runs-on: ubuntu-latest
     steps:
       - name: Code checkout
@@ -12,8 +33,21 @@ jobs:
         with: 
           fetch-depth: 0
 
-      - name: SonarQube scan
-        uses: SonarSource/sonarqube-scan-action@v8.2.1 # Ex: v4.1.0 or sha1, See the latest version at https://github.com/marketplace/actions/official-sonarqube-scan
-        env:
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: npm # Automatically caches dependencies for faster runner speeds
+          cache-dependency-path: frontend/package-lock.json
+        
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build frontend
+        run: npm run build
+
+      - name: Sonar scan
+        uses: SonarSource/sonarqube-scan-action@v8.2.1 
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
