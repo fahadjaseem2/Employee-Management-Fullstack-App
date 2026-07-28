@@ -76,11 +76,22 @@ jobs:
         working-directory: backend
         run: mvn -B clean verify
 
+      # - name: SonarQube Scan
+      #   uses: SonarSource/sonarqube-scan-action@v8.2.1 
+      #   env:
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      #     SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
       - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v8.2.1 
+        working-directory: backend
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        run: |
+          mvn -B sonar:sonar \
+            -Dsonar.token=${{ secrets.SONAR_TOKEN }}
+            -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }}
+
 
 
 
