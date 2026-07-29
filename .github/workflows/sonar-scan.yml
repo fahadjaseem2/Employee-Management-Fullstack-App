@@ -92,6 +92,7 @@ jobs:
             -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
             -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }}
     # for project name
+    
     #  -Dsonar.projectKey=workforceOps-backend \
     #  -Dsonar.projectName="WorkforceOps Backend" \
 

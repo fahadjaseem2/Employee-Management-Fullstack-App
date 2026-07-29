@@ -1,9 +1,8 @@
 name: CD Workflow for WorkForceOps
+
 on:
-  workflow_dispatch:
-  # push:
-  #   branches:
-  #     - dev
+  worlflow-call:
+
 jobs:
   deploy:
     runs-on: self-hosted
@@ -32,7 +31,7 @@ jobs:
           docker ps
           docker-compose ps
 
-      - name: Compose down
-        run: docker-compose down -v
+      # - name: Compose down
+      #   run: docker-compose down -v
         
         
