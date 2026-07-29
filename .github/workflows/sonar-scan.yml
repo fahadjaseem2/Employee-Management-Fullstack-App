@@ -89,10 +89,11 @@ jobs:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         run: |
           mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-            -Dsonar.projectKey=workforceOps-backend \
-            -Dsonar.projectName="WorkforceOps Backend" \
             -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
             -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }}
+    # for project name
+    #  -Dsonar.projectKey=workforceOps-backend \
+    #  -Dsonar.projectName="WorkforceOps Backend" \
 
 
 
