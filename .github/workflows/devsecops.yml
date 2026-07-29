@@ -37,6 +37,7 @@ jobs:
       - sonarqube
       - code-test
     uses: ./.github/workflows/docker-push.yml
+    secrets: inherit
 
     
 
