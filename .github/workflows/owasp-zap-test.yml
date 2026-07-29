@@ -1,0 +1,21 @@
+name: OWASP ZAP
+
+on:
+  workflow_call:
+
+steps:
+  owasp-zap-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Code Checkout 
+        uses: actions/checkout@v4
+
+      - name: ZAP scan
+        uses: zaproxy/action-full-scan@v0.14.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          target: http://${{ EC2_HOST }}:3000
+          fail_action: false
+          allow_issue_writing: false
+
+      

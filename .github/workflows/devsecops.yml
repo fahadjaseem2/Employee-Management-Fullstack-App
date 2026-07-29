@@ -46,6 +46,12 @@ jobs:
     needs:
       - docker-push
     uses: ./.github/workflows/deploy.yml
+
+  OWASP-zap-scan:
+    needs: 
+      - deploy
+    uses: ./.github/workflows/owasp-zap-test.yml
+
     
   
 
