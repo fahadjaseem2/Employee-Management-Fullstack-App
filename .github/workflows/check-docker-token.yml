@@ -1,0 +1,24 @@
+name: check docker token
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  check-token:
+    runs-on: ubuntu-latest
+    steps:
+      - name: code
+        uses: actions/checkout@v4
+
+      - name: Check Docker token
+        env:
+          DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
+        run: |
+          if [ -z "$DOCKER_TOKEN" ]; then
+            echo "DOCKER_TOKEN is EMPTY"
+            exit 1
+          else
+            echo "DOCKER_TOKEN is present"
+          fi
