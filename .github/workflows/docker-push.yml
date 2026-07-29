@@ -30,6 +30,7 @@ jobs:
         with:
           username: ${{ vars.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
+          
 
       - name: docker build and push
         uses: docker/build-push-action@v7
