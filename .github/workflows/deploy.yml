@@ -1,7 +1,7 @@
 name: CD Workflow for WorkForceOps
 
 on:
-  workflow-call:
+  workflow_call:
 
 jobs:
   deploy:
