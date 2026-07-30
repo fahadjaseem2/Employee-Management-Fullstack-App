@@ -10,6 +10,9 @@ jobs:
       - name: Code Checkout 
         uses: actions/checkout@v4
 
+      - name: check secrets
+        run: echo " secrets is ${{ secrets.EC2_HOST }}"
+
       - name: ZAP scan
         uses: zaproxy/action-full-scan@v0.13.0
         with:
