@@ -52,7 +52,7 @@ jobs:
       - deploy
     uses: ./.github/workflows/owasp-zap-test.yml
     secrets:
-    EC2_HOST: ${{ secrets.EC2_HOST }}
+      EC2_HOST: ${{ secrets.EC2_HOST }}
 
     
   
