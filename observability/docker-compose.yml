@@ -8,13 +8,42 @@ services:
       - prometheus_data:/prometheus
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"  # Load Prometheus configuration from this file.
-      - "--storage.tsdb.path=/prometheus" # Store all metrics data in the /prometheus directory.
-      - "--web.enable-lifecycle" # Allow Prometheus config reload without restarting the container.
+      - "--storage.tsdb.path=/prometheus"               # Store all metrics data in the /prometheus directory.
+      - "--web.enable-lifecycle"                        # Allow Prometheus config reload without restarting the container.
 
     networks:
       - monitor
     ports:
       - "9090:9090"
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+    restart: always
+    volumes:
+      - /proc:/host/proc:ro    # Mount host process information as read-only.
+      - /sys:/host/sys:ro      # Mount host system information as read-only.
+      - /:/rootfs:ro           # Mount the host root filesystem as read-only.
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    networks:
+      - monitor
+    ports:
+      - "9100:9100"
+
+  grafana:
+    image: grafana/grafana-enterprise
+    container_name: grafana
+    volumes:
+      - grafana-storage:/var/lib/grafana
+    networks:
+      - monitor
+    ports:
+      - "3000:3000"
+
 
 networks:
   monitor:
@@ -22,3 +51,4 @@ networks:
 
 volumes:
   prometheus_data:
+  grafana-storage:
