@@ -42,7 +42,51 @@ services:
     networks:
       - monitor
     ports:
-      - "3000:3000"
+      - "3001:3000"
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: cadvisor
+    restart: always
+    volumes:
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /:/rootfs:ro
+      - /sys:/sys:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/lib/containerd:/var/lib/containerd:ro
+    networks:
+      - monitor
+    ports:
+      - "8081:8080"
+
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+    restart: always
+    volumes:
+      - ./loki-config.yml:/etc/loki/config.yaml:ro
+      - loki-data:/loki
+    command: -config.file=/etc/loki/config.yaml
+    networks:
+      - monitor
+    ports:
+      - "3100:3100"
+
+  
+  promtail:
+    image: grafana/promtail:latest
+    container_name: promtail
+    restart: always
+    volumes: 
+      - ./promtail-config.yml:/etc/promtail/config.yaml:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: -config.file=/etc/promtail/config.yaml
+    networks:
+      - monitor
+    depends_on:
+      - loki
+
 
 
 networks:
@@ -52,3 +96,4 @@ networks:
 volumes:
   prometheus_data:
   grafana-storage:
+  loki-data:

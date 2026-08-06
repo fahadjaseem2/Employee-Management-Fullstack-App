@@ -1,0 +1,26 @@
+# Promtail HTTP server configuration
+server:
+  http_listen_port: 9080   # Promtail listens on port 9080
+
+# Store the last read position of log files
+positions:
+  filename: /tmp/positions.yaml   # Prevents rereading old logs after restart
+
+# Where Promtail sends collected logs
+clients:
+  - url: http://loki:3100/loki/api/v1/push   # Send logs to Loki
+
+# Configure which logs to collect
+scrape_configs:
+  - job_name: docker   # Name of this log collection job
+
+    static_configs:
+      - targets:
+          - localhost   # Required placeholder (not actually used for file scraping)
+
+        labels:
+          job: docker   # Label added to all Docker logs
+          __path__: /var/lib/docker/containers/*/*-json.log   # Read Docker container log files
+
+    pipeline_stages:
+      - docker: {}   # Parse Docker JSON log format
