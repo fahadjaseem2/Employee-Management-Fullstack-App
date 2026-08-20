@@ -1,0 +1,59 @@
+name: devsecops
+
+on: 
+  push:
+    branches:
+      - dev
+
+jobs:
+  code-quality:
+    uses: ./.github/workflows/code-quality.yml
+
+  secret-scaning:
+    uses: ./.github/workflows/secret-scaning.yml 
+
+  dependency-scan:
+    uses: ./.github/workflows/dependency-scan.yml
+
+  docker-lint-and-scan:
+    permissions:
+      contents: read
+      security-events: write
+    uses: ./.github/workflows/docker-scan.yml
+  
+  sonarqube:
+    uses: ./.github/workflows/sonar-scan.yml
+    secrets: inherit
+
+  code-test:
+    uses: ./.github/workflows/code-test.yml
+
+  docker-push:
+    needs: 
+      - code-quality
+      - secret-scaning
+      - dependency-scan
+      - docker-lint-and-scan
+      - sonarqube
+      - code-test
+    uses: ./.github/workflows/docker-push.yml
+    secrets: inherit
+
+    
+#------deploy-------#
+
+  deploy:
+    needs:
+      - docker-push
+    uses: ./.github/workflows/deploy.yml
+
+  OWASP-zap-scan:
+    needs: 
+      - deploy
+    uses: ./.github/workflows/owasp-zap-test.yml
+    secrets: inherit
+
+    
+  
+
+   

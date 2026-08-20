@@ -1,0 +1,37 @@
+name: CD Workflow for WorkForceOps
+
+on:
+  workflow_call:
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Code checkout
+        uses: actions/checkout@v4
+
+      - name: Check Docker
+        run: docker --version
+
+      - name: check compose
+        run: docker-compose --version
+
+      - name: Stop existing containers
+        run: docker-compose down
+
+      - name: docker compose build image
+        run: docker-compose build
+
+      - name: docker compose deploy
+        run: docker-compose up -d
+
+      - name: Verify deployment
+        run: |
+          docker ps
+          docker-compose ps
+
+      # - name: Compose down
+      #   run: docker-compose down -v
+        
+        

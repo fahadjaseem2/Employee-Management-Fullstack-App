@@ -1,0 +1,76 @@
+name: Dependecy Scan using trivy
+
+on: workflow_call
+
+jobs:
+  Dependecy-check:
+    runs-on: ubuntu-latest
+    steps:
+
+
+      - name: code checkout
+        uses: actions/checkout@v4
+
+      - name: Scan Node.js dependencies
+        continue-on-error: true
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: fs # fs= file system
+          scan-ref: . # scan from root that include frontend and backend
+          #trivy-config: trivy.yaml # "Instead of specifying all the options in the workflow, read them from the trivy.yaml configuration file."
+          scanners: vuln
+          severity: HIGH,CRITICAL
+          format: json  #This controls how the scan results are displayed. in table format. other formats are json, sarif, cyclonedx, template etc.
+          output: trivy-report.json
+          exit-code: 1
+
+
+      - name: Upload Job Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-report        # The name your zip file will have
+          path: trivy-report.json # Path to your file or directory  
+          retention-days: 5  # Keeps the file for 5 days only 
+
+      - name: Trivy Summary For JSON
+        if: always()
+        run: |
+          echo "Critical: $(jq '[.Results[].Vulnerabilities[] | select(.Severity=="CRITICAL")] | length' trivy-report.json)"
+          echo "High: $(jq '[.Results[].Vulnerabilities[] | select(.Severity=="HIGH")] | length' trivy-report.json)" 
+
+      - name: Show Critical Vulnerabilities
+        if: always()
+        run: |
+          echo "===== Critical Vulnerabilities ====="
+
+          jq '
+          .Results[].Vulnerabilities[]
+          | select(.Severity=="CRITICAL")
+          | {
+              CVE: .VulnerabilityID,
+              Package: .PkgName,
+              Installed: .InstalledVersion,
+              Fixed: .FixedVersion,
+              Title: .Title
+          }
+          ' trivy-report.json
+
+
+
+      # - name: Show Critical Vulnerabilities
+      #   if: always()
+      #   run: |
+      #     echo "===== Critical Vulnerabilities ====="
+
+      #     jq -r '
+      #     .Results[].Vulnerabilities[]
+      #     | select(.Severity=="CRITICAL")
+      #     | [.PkgName, .InstalledVersion, .FixedVersion, .VulnerabilityID]
+      #     | @tsv
+      #     ' trivy-report.json | column -t
+
+
+      
+
+    

@@ -1,0 +1,57 @@
+name: Docker push
+
+on:
+  workflow_call:
+    # secrets:
+    #   DOCKER_TOKEN:
+    #     required: true
+
+jobs:
+  docker-build-and-push:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        working-directory:
+          - frontend
+          - backend
+
+    steps:
+      - name: Code checkout
+        uses: actions/checkout@v4
+
+      #- name: Setup QEMU
+        #uses: docker/setup-qemu-action@v4
+      # use for multi architecture,right now i dont need because its build on one arch.
+      
+      # - name: Set up Docker Buildx
+      #   uses: docker/setup-buildx-action@v3
+      - name: Setup docker
+        uses: docker/setup-docker-action@v5
+
+      - name: Check Docker token
+        env:
+          DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
+        run: |
+          if [ -z "$DOCKER_TOKEN" ]; then
+            echo "DOCKER_TOKEN is EMPTY"
+            exit 1
+          else
+            echo "DOCKER_TOKEN is present"
+          fi
+
+      - name: docker login
+        uses: docker/login-action@v4
+        with:
+          username: ${{ vars.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+
+      - name: docker build and push
+        uses: docker/build-push-action@v7
+        with:
+          context: ${{ matrix.working-directory }}
+          push: true
+          tags: |
+            ${{ vars.DOCKER_USERNAME }}/workforceops-${{ matrix.working-directory }}:${{ github.sha }}
+            ${{ vars.DOCKER_USERNAME }}/workforceops-${{ matrix.working-directory }}:latest
+

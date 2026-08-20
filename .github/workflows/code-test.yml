@@ -1,0 +1,71 @@
+name: Code test
+
+on:
+  workflow_call:
+
+jobs:
+  code-test-frontend:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./frontend
+
+    steps:
+      - name: Code Checkout 
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: npm # Automatically caches dependencies for faster runner speeds
+          cache-dependency-path: frontend/package-lock.json
+      
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run prettier 
+        run: npm run format
+
+      - name: Run prettier 
+        run: npm run format
+
+       #- name: Run Linter
+        #run: npm run lint
+
+# If your format script uses --write, it will modify files during CI, which isn't ideal.
+
+      #- name: Check Prettier formatting
+        #run: npx prettier --check .
+
+      #- name: Run Test
+        #run: npm test
+
+      #- name: Build frontend
+        #run: npm run build
+
+  code-test-backend:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./backend
+    
+    steps:
+      - name: Code checkout
+        uses: actions/checkout@v4
+      
+      - name: Setup JDK 11
+        uses: actions/setup-java@v4
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          cache: 'maven'
+      
+      - name: Download Maven dependencies
+        run: mvn -B dependency:resolve dependency:resolve-plugins
+
+      - name: Run Test 
+        run: mvn -B test
+        
