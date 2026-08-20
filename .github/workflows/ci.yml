@@ -1,9 +1,10 @@
 name: CI Workflow for WorkforceOps
 on:
+  push:
+    branches:
+      - master
   workflow_dispatch:
-  # push:
-  #   branches:
-  #     - dev
+  
   
 jobs:
   frontend:
@@ -102,7 +103,9 @@ jobs:
         with:
           context: ${{ matrix.working-directory }}
           push: true
+
           tags: ${{ vars.DOCKER_USERNAME }}/workforceops-${{ matrix.working-directory }}:${{ github.sha }}
+          tags: ${{ vars.DOCKER_USERNAME }}/workforceops-${{ matrix.working-directory }}:latest
 
 
 
