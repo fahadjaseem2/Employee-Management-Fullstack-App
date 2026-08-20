@@ -1,0 +1,64 @@
+name: Docker Scan
+on:
+  workflow_call
+
+
+jobs:
+  docker-file-lint:
+
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        working-directory:
+          - frontend
+          - backend
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Run Hadolint-${{ matrix.working-directory }}
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: ${{ matrix.working-directory }}/Dockerfile
+
+
+      # The reason is that GitHub-hosted runners already come with Docker installed and running.
+      # - name: Set up Docker Buildx
+      #   uses: docker/setup-buildx-action@v3
+
+  
+
+      - name: Build Local Docker Image
+        run: docker build -t ${{ matrix.working-directory }}-workforceops:${{ github.sha }} .
+        working-directory: ${{ matrix.working-directory }}
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: ${{ matrix.working-directory }}-workforceops:${{ github.sha }}
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'HIGH,CRITICAL'
+          #scanners: vuln
+          #This focuses on vulnerability scanning and skips secret scanning.
+
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v4
+        if: always() 
+        with:
+          sarif_file: 'trivy-results.sarif'
+          
+# optional
+      # - name: Upload docker Job Report
+      #   uses: actions/upload-artifact@v4
+      #   if: always()
+      #   with:
+      #     name: trivy-results
+      #     path: trivy-results.sarif
+      #     retention-days: 5
+
+
+
+ 
